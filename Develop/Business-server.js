@@ -29,7 +29,7 @@ function start() {
     .prompt({
       name: "typeOfQuery",
       type: "list",
-      message: "What kind of query would you like to make?",
+      message: "What would you like to do?",
       choices: ["add department", "add roles",  "add employees", "view department", "view roles", "view employees", "update employee roles", "quit"]
     })
     .then(function(answer) {
