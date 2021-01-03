@@ -27,43 +27,43 @@ connection.connect(function(err) {
 function start() {
   inquirer
     .prompt({
-      name: "typeOfQuery",
+      name: "action",
       type: "list",
       message: "What would you like to do?",
-      choices: ["add department", "add roles",  "add employees", "view department", "view roles", "view employees", "update employee roles", "quit"]
+      choices: ["add department", "add roles",  "add employees", "view department", "view roles", "view employees", "update employee roles", "EXIT"]
     })
     .then(function(answer) {
       // based on user answer, post these functions
-    switch (answer.choices) {
-      case 'add department':
+    switch (answer.action) {
+        case "add department":
         return addDepartment();
         break;
 
-        case 'add roles':
+        case "add roles":
         return addRoles();
         break;
 
-        case 'add employees':
+        case "add employees":
         return addEmployees();
         break;
 
-        case 'view department':
+        case "view department":
         return viewDepartment();
         break;
 
-        case 'view roles':
+        case "view roles":
         return viewRoles();
         break;
 
-        case 'view employees':
+        case "view employees":
         return viewEmployees();
         break;
 
-        case 'updateemployeeroles':
+        case "update employee roles":
         return updateEmployeeRoles();
         break;
 
-        default: 'quit'
+        default: "EXIT"
         console.log("You may close the application.");
       
     }
@@ -76,13 +76,75 @@ function addDepartment() {
     name: "department",
     type: "input",
     message: "What is the name of the department?"
-  }).then(function (answers) {
-    const deptAns = answers.department;
-    const query = "SELECT * FROM" 
-    connection.query(query, deptAns, function(err){
-      if(err) throw err;
-      
+  }).then(function (answer) {
+    connection.query(
+      "INSERT INTO department SET ?",
+      {department_name: answer.department},
+      function(err) {
+        if (err) throw err;
+        console.log("The department has been successfully added");
+      //excute view function here
+      viewDepartment();
     })
   } 
+  )
+}
+
+function addRoles() {
+  inquirer.prompt({
+    name: "roles",
+    type: "input",
+    message: "What is the employee's title?"
+  }).then(function (answer) {
+    connection.query(
+      "INSERT INTO department_role SET ?",
+      {title: answer.roles},
+      function(err) {
+        if (err) throw err;
+        console.log("The employee's title has been successfully added"); 
+      viewRoles();
+    })
+  }
+  )
+}
+
+function addEmployees() {
+  inquirer.prompt({
+    name: "employeeF",
+    type: "input",
+    message: "What is the employee's first name?"
+  }),
+  inquirer.prompt({
+    name: "employeeL",
+    type: "input",
+    message: "What is the employee's last name?"
+  }).then(function (answer) {
+    connection.query(
+      "INSERT INTO employee SET ?",
+      {first_name: answer.employeeF,
+      last_name: answer.employeeL},
+      function(err) {
+        if (err) throw err;
+        console.log("The employee has been successfully added"); 
+      viewEmployees();
+    })
+  }
+  )
+}
+
+function viewDepartment() {
+  inquirer.prompt({
+    name: "department",
+    type: "input",
+    message: "Which department would you like to view?"
+  }).then(function (answers) {
+    const deptAns = answers.department;
+    const query = "SELECT department.id, department_name, department_role.department.id"
+    query += "FROM department INNER JOIN department_role ON (department.id = department_role.department.id AND department.department_name" 
+    connection.query(query, deptAns, function
+    (err) {
+      if(err) throw err; 
+    })
+  }
   )
 }
