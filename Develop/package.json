@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node business-server.js",
+    "start-server": "node business-server.js"
   },
   "keywords": [],
   "author": "Carla Jeanpierre",
@@ -12,6 +14,7 @@
   "dependencies": {
     "console.table": "^0.10.0",
     "inquirer": "^7.3.3",
-    "mysql": "^2.18.1"
+    "mysql": "^2.18.1",
+    "nodemon": "^1.18.3"
   }
 }
