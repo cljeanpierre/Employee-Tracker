@@ -91,21 +91,37 @@ function addDepartment() {
 }
 
 function addRoles() {
-  inquirer.prompt({
-    name: "roles",
+  inquirer.prompt([{
+    name: "title",
     type: "input",
     message: "What is the employee's title?"
-  }).then(function (answer) {
-    connection.query(
-      "INSERT INTO department_role SET ?",
-      {title: answer.roles},
-      function(err) {
-        if (err) throw err;
-        console.log("The employee's title has been successfully added"); 
-      viewRoles();
-    })
+  },
+  {
+    name: "salary",
+    type: "input",
+    message: "What is the employee's salary?"
+  },
+  {
+    name: "department_id",
+    type: "input",
+    message: "What is the employee's department id number?"
   }
-  )
+  ])
+.then(function(answer) {
+  connection.query(
+    "INSERT INTO employee_role SET ?",
+    {
+      title: answer.title,
+      salary: answer.salary,
+      department_id: answer.department_id
+    },
+    function(err) {
+      if (err) throw err;
+      console.log("The employee has been successfully added");
+      viewEmployees();
+    }
+  );
+});
 }
 
 function addEmployees() {
@@ -132,19 +148,56 @@ function addEmployees() {
   )
 }
 
-function viewDepartment() {
-  inquirer.prompt({
-    name: "department",
-    type: "input",
-    message: "Which department would you like to view?"
-  }).then(function (answers) {
-    const deptAns = answers.department;
-    const query = "SELECT department.id, department_name, department_role.department.id"
-    query += "FROM department INNER JOIN department_role ON (department.id = department_role.department.id AND department.department_name" 
-    connection.query(query, deptAns, function
-    (err) {
-      if(err) throw err; 
-    })
-  }
-  )
+// function viewDepartment() {
+//   inquirer.prompt({
+//     name: "department",
+//     type: "input",
+//     message: "Which department would you like to view?"
+//   }).then(function (answers) {
+//     const deptAns = answers.department;
+//     const query = "SELECT department.id, department_name, department_role.department.id"
+//     query += "FROM department INNER JOIN department_role ON (department.id = department_role.department.id AND department.department_name" 
+//     connection.query(query, deptAns, function
+//     (err) {
+//       if(err) throw err; 
+//     })
+//   }
+//   )
+// }
+
+function updateEmployeeRoles() {
+  inquirer
+    .prompt([
+      {
+        name: "title",
+        type: "input",
+        message: "What is the employee's title?"
+      },
+      {
+        name: "salary",
+        type: "input",
+        message: "What is the employee's salary?"
+      },
+      {
+        name: "department_id",
+        type: "input",
+        message: "What is the employee's department id number?"
+      }
+    ])
+    .then(function(answer) {
+      connection.query(
+        "UPDATE employee SET ? WHERE ?",
+        {
+          title: answer.title,
+          salary: answer.salary,
+          department_id: answer.department_id
+        },
+        function(err) {
+          if (err) throw err;
+          console.log("The employee has been successfully updated");
+          viewEmployees();
+        }
+      );
+    });
 }
+  
