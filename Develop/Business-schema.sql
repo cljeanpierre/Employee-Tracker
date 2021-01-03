@@ -8,7 +8,7 @@ CREATE TABLE department (
   department_name VARCHAR(30) NULL,
 );
 
-CREATE TABLE department_role (
+CREATE TABLE employee_role (
   id INT PRIMARY KEY AUTO_INCREMENT,
   title VARCHAR(30) NULL,
   salary DECIMAL(10,4) NULL,
