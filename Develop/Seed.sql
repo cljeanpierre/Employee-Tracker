@@ -1,12 +1,12 @@
 INSERT INTO department (department_name)
 VALUES ("Finance"), ("Technology"), ("Human Resources"), ("Marketing");
 
-INSERT INTO department_role (title, salary, department_id)
+INSERT INTO employee_role (title, salary, department_id)
 VALUES 
-("Research Analyst","90,000", "12"), 
-("Treasurer","180,000", "32"),  
-("Personnel Manager","65,000", "5"), 
-("Recruiter","45,000", "8");
+("Research Analyst","90000", "12"), 
+("Treasurer","180000", "32"),  
+("Personnel Manager","65000", "5"), 
+("Recruiter","45000", "8");
 
 INSERT INTO employee (first_name, last_name, role_id, manager_id)
 VALUES 
