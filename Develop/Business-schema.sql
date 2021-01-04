@@ -5,14 +5,14 @@ USE company_profilesDB;
 
 CREATE TABLE department (
   id INT PRIMARY KEY AUTO_INCREMENT,
-  department_name VARCHAR(30) NULL,
+  department_name VARCHAR(30) NULL
 );
 
 CREATE TABLE employee_role (
   id INT PRIMARY KEY AUTO_INCREMENT,
   title VARCHAR(30) NULL,
-  salary DECIMAL(10,4) NULL,
-  department_id INT NULL,
+  salary INT NULL,
+  department_id INT NULL
 );
 
 CREATE TABLE employee (
@@ -20,9 +20,9 @@ CREATE TABLE employee (
   first_name VARCHAR(30) NULL,
   last_name VARCHAR(30) NULL,
   role_id INT NULL,
-  manager_id INT NULL,
+  manager_id INT NULL
 );
 
 SELECT * FROM department;
-SELECT * FROM department_role;
+SELECT * FROM employee_role;
 SELECT * FROM employee;
