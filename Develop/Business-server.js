@@ -17,9 +17,9 @@ var connection = mysql.createConnection({
 });
 
 // connect to the mysql server and sql database
-connection.connect(function(err) {
+connection.connect(function (err) {
   if (err) throw err;
-// run the start function after the connection is made to prompt the user
+  // run the start function after the connection is made to prompt the user
   start();
 });
 
@@ -30,43 +30,43 @@ function start() {
       name: "action",
       type: "list",
       message: "What would you like to do?",
-      choices: ["add department", "add roles",  "add employees", "view department", "view roles", "view employees", "update employee roles", "EXIT"]
+      choices: ["add department", "add roles", "add employees", "view department", "view roles", "view employees", "update employee roles", "EXIT"]
     })
-    .then(function(answer) {
+    .then(function (answer) {
       // based on user answer, post these functions
-    switch (answer.action) {
+      switch (answer.action) {
         case "add department":
-        return addDepartment();
-        break;
+          return addDepartment();
+          break;
 
         case "add roles":
-        return addRoles();
-        break;
+          return addRoles();
+          break;
 
         case "add employees":
-        return addEmployees();
-        break;
+          return addEmployees();
+          break;
 
         case "view department":
-        return viewDepartment();
-        break;
+          return viewDepartment();
+          break;
 
         case "view roles":
-        return viewRoles();
-        break;
+          return viewRoles();
+          break;
 
         case "view employees":
-        return viewEmployees();
-        break;
+          return viewEmployees();
+          break;
 
         case "update employee roles":
-        return updateEmployeeRoles();
-        break;
+          return updateEmployeeRoles();
+          break;
 
         default: "EXIT"
-        console.log("You may close the application.");
-      
-    }
+          console.log("You may close the application.");
+
+      }
 
     });
 }
@@ -79,14 +79,14 @@ function addDepartment() {
   }).then(function (answer) {
     connection.query(
       "INSERT INTO department SET ?",
-      {department_name: answer.department},
-      function(err) {
+      { department_name: answer.department },
+      function (err) {
         if (err) throw err;
         console.log("The department has been successfully added");
-      //excute view function here
-      viewDepartment();
-    })
-  } 
+        //excute view function here
+        viewDepartment();
+      })
+  }
   )
 }
 
@@ -107,21 +107,21 @@ function addRoles() {
     message: "What is the employee's department id number?"
   }
   ])
-.then(function(answer) {
-  connection.query(
-    "INSERT INTO employee_role SET ?",
-    {
-      title: answer.title,
-      salary: answer.salary,
-      department_id: answer.department_id
-    },
-    function(err) {
-      if (err) throw err;
-      console.log("The employee has been successfully added");
-      viewEmployees();
-    }
-  );
-});
+    .then(function (answer) {
+      connection.query(
+        "INSERT INTO employee_role SET ?",
+        {
+          title: answer.title,
+          salary: answer.salary,
+          department_id: answer.department_id
+        },
+        function (err) {
+          if (err) throw err;
+          console.log("The employee has been successfully added");
+          viewEmployees();
+        }
+      );
+    });
 }
 
 function addEmployees() {
@@ -130,40 +130,64 @@ function addEmployees() {
     type: "input",
     message: "What is the employee's first name?"
   }),
-  inquirer.prompt({
-    name: "employeeL",
-    type: "input",
-    message: "What is the employee's last name?"
-  }).then(function (answer) {
-    connection.query(
-      "INSERT INTO employee SET ?",
-      {first_name: answer.employeeF,
-      last_name: answer.employeeL},
-      function(err) {
-        if (err) throw err;
-        console.log("The employee has been successfully added"); 
-      viewEmployees();
-    })
-  }
-  )
+    inquirer.prompt({
+      name: "employeeL",
+      type: "input",
+      message: "What is the employee's last name?"
+    }).then(function (answer) {
+      connection.query(
+        "INSERT INTO employee SET ?",
+        {
+          first_name: answer.employeeF,
+          last_name: answer.employeeL
+        },
+        function (err) {
+          if (err) throw err;
+          console.log("The employee has been successfully added");
+          viewEmployees();
+        })
+    }
+    )
 }
 
-// function viewDepartment() {
-//   inquirer.prompt({
-//     name: "department",
-//     type: "input",
-//     message: "Which department would you like to view?"
-//   }).then(function (answers) {
-//     const deptAns = answers.department;
-//     const query = "SELECT department.id, department_name, department_role.department.id"
-//     query += "FROM department INNER JOIN department_role ON (department.id = department_role.department.id AND department.department_name" 
-//     connection.query(query, deptAns, function
-//     (err) {
-//       if(err) throw err; 
-//     })
-//   }
-//   )
-// }
+function viewDepartment() {
+  console.log("Listing all departments...\n");
+  connection.query("SELECT * FROM department", function (err, res) {
+    if (err) throw err;
+    //Log all results of the SELECT statement
+    console.log(res);
+    start();
+  })
+}
+
+function viewRoles() {
+  inquirer
+    .prompt({
+      name: "role",
+      type: "input",
+      message: "What is the title of the employees you would like to view?"
+    })
+    .then(function (answer) {
+      var query = "SELECT employee_role.id, employee_role.title, employee_role.salary";
+      query += "FROM employee_role INNER JOIN employee ON employee_role.id";
+
+      connection.query(query, [answer.role], function (err, res) {
+        if (err) throw err;
+        console.log(res);
+        start();
+      })
+    }
+}
+
+
+function viewEmployees() {
+  console.log("Listing all employees...\n");
+  connection.query("SELECT * FROM employee", function (err, res) {
+    if (err) throw err;
+    console.log(res);
+    start();
+  })
+}
 
 function updateEmployeeRoles() {
   inquirer
@@ -184,7 +208,7 @@ function updateEmployeeRoles() {
         message: "What is the employee's department id number?"
       }
     ])
-    .then(function(answer) {
+    .then(function (answer) {
       connection.query(
         "UPDATE employee SET ? WHERE ?",
         {
@@ -192,7 +216,7 @@ function updateEmployeeRoles() {
           salary: answer.salary,
           department_id: answer.department_id
         },
-        function(err) {
+        function (err) {
           if (err) throw err;
           console.log("The employee has been successfully updated");
           viewEmployees();
@@ -200,4 +224,3 @@ function updateEmployeeRoles() {
       );
     });
 }
-  
