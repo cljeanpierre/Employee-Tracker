@@ -162,23 +162,20 @@ function viewDepartment() {
 
 function viewRoles() {
   inquirer
-    .prompt({
-      name: "role",
-      type: "input",
-      message: "What is the title of the employees you would like to view?"
+  .prompt({
+    name: "role",
+    type: "input",
+    message: "What is the title of the employees you would like to view?",
+  }).then (function(answer){
+    var query = "SELECT employee_role.id, employee_role.title, employee_role.salary";
+    query += "FROM employee_role INNER JOIN employee ON employee_role.id";
+    connection.query(query, [answer.role], function (err, res) {
+      if (err) throw err;
+      console.log(res);
+      start();
     })
-    .then(function (answer) {
-      var query = "SELECT employee_role.id, employee_role.title, employee_role.salary";
-      query += "FROM employee_role INNER JOIN employee ON employee_role.id";
-
-      connection.query(query, [answer.role], function (err, res) {
-        if (err) throw err;
-        console.log(res);
-        start();
-      })
-    }
+  })
 }
-
 
 function viewEmployees() {
   console.log("Listing all employees...\n");
