@@ -1,3 +1,5 @@
+USE company_profilesDB;
+
 INSERT INTO department (department_name)
 VALUES ("Finance"), ("Technology"), ("Human Resources"), ("Marketing");
 
