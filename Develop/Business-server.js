@@ -117,6 +117,46 @@ function addRoles() {
         },
         function (err) {
           if (err) throw err;
+          console.log("The role has been successfully added");
+          viewRoles();
+        }
+      );
+    });
+}
+
+function addEmployees() {
+  inquirer.prompt([{
+    name: "first_name",
+    type: "input",
+    message: "What is the employee's first name?"
+  },
+  {
+    name: "last_name",
+    type: "input",
+    message: "What is the employee's last name?"
+  },
+  {
+    name: "role_id",
+    type: "input",
+    message: "What is the employee's role id number?"
+  },
+  {
+    name: "manager_id",
+    type: "input",
+    message: "What is the employee's manager's id number?"
+  }
+  ])
+    .then(function (answer) {
+      connection.query(
+        "INSERT INTO employee SET ?",
+        {
+          first_name: answer.first_name,
+          last_name: answer.last_name,
+          role_id: answer.role_id,
+          manager_id: answer.manager_id
+        },
+        function (err) {
+          if (err) throw err;
           console.log("The employee has been successfully added");
           viewEmployees();
         }
@@ -124,35 +164,9 @@ function addRoles() {
     });
 }
 
-function addEmployees() {
-  inquirer.prompt({
-    name: "employeeF",
-    type: "input",
-    message: "What is the employee's first name?"
-  }),
-    inquirer.prompt({
-      name: "employeeL",
-      type: "input",
-      message: "What is the employee's last name?"
-    }).then(function (answer) {
-      connection.query(
-        "INSERT INTO employee SET ?",
-        {
-          first_name: answer.employeeF,
-          last_name: answer.employeeL
-        },
-        function (err) {
-          if (err) throw err;
-          console.log("The employee has been successfully added");
-          viewEmployees();
-        })
-    }
-    )
-}
-
 function viewDepartment() {
   console.log("Listing all departments...\n");
-  connection.query("SELECT * FROM department INNER JOIN employee ON department.id = employee.id", function (err, res) {
+  connection.query("SELECT * FROM department", function (err, res) {
     if (err) throw err;
     //Log all results of the SELECT statement
     console.table(res);
@@ -161,7 +175,7 @@ function viewDepartment() {
 }
 
 function viewRoles() {
-  connection.query("SELECT * FROM employee_role INNER JOIN employee ON employee_role.id = employee.id", function (err, res) {
+  connection.query("SELECT * FROM employee_role", function (err, res) {
     if (err) throw err;
     console.table(res);
     start();
@@ -170,7 +184,7 @@ function viewRoles() {
 
 function viewEmployees() {
   console.log("Listing all employees...\n");
-  connection.query("SELECT * FROM employee INNER JOIN department ON employee.id = department.id", function (err, res) {
+  connection.query("SELECT * FROM employee", function (err, res) {
     if (err) throw err;
     console.table(res);
     start();
