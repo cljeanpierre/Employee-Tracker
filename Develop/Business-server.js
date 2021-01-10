@@ -220,8 +220,8 @@ function updateEmployeeRoles() {
         },
         function (err) {
           if (err) throw err;
-          console.log("The employee has been successfully updated");
-          viewEmployees();
+          console.log("The employee's role has been successfully updated");
+          viewRoles();
         }
       );
     });
