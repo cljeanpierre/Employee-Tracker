@@ -152,16 +152,16 @@ function addEmployees() {
 
 function viewDepartment() {
   console.log("Listing all departments...\n");
-  connection.query("SELECT * FROM department", function (err, res) {
+  connection.query("SELECT * FROM department INNER JOIN employee ON department.id = employee.id", function (err, res) {
     if (err) throw err;
     //Log all results of the SELECT statement
-    console.log(res);
+    console.table(res);
     start();
   })
 }
 
 function viewRoles() {
-  connection.query("SELECT * FROM employee_role", function (err, res) {
+  connection.query("SELECT * FROM employee_role INNER JOIN employee ON employee_role.id = employee.id", function (err, res) {
     if (err) throw err;
     console.table(res);
     start();
@@ -170,9 +170,9 @@ function viewRoles() {
 
 function viewEmployees() {
   console.log("Listing all employees...\n");
-  connection.query("SELECT * FROM employee", function (err, res) {
+  connection.query("SELECT * FROM employee INNER JOIN department ON employee.id = department.id", function (err, res) {
     if (err) throw err;
-    console.log(res);
+    console.table(res);
     start();
   })
 }
